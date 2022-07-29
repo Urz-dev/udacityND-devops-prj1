@@ -1,35 +1,21 @@
 {
-  "mode": "Indexed",
-  "policyRule": {
-    "if": {
-      "not": {
-        "field": "[concat('tags[', parameters('tagName'), ']')]",
-        "in": "[parameters('tagValue')]"
-      }
+  "type":"custom",
+  "properties": {
+    "displayName": "verify that a tag exists on a resource.Only indexed resources are checked so, Resource groups are not checked",
+    "mode": "Indexed",
+    
+    "description": "Enforces a required tag and its value. Does not apply to resource groups.",
+    "metadata": {
+      "createdBy": "Umair.R"
     },
-    "then": {
-      "effect": "deny"
-    }
-  },
-  "parameters": {
-    "tagName": {
-      "type": "String",
-      "metadata": {
-        "displayName": "Tag Name",
-        "description": "Name of the tag, such as 'Environment'"
-      }
-    },
-    "tagValue": {
-      "type": "Array",
-      "metadata": {
-        "displayName": "Tag Value",
-        "description": "Value of the tag, such as 'Prod'"
+    "policyRule": {
+      "if": {
+          "field": "['tags']",
+          "exists": "false"
       },
-      "allowedValues": [
-        "Dev",
-        "Test",
-        "Prod"
-      ]
+      "then": {
+        "effect": "deny"
+      }
     }
   }
 }
