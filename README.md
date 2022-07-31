@@ -40,6 +40,42 @@ packer build server.json
 ```
 
 ## Terraform ##
+Terraform is used to deploy the server image created from packer to azure virtual machines.
+### User Variables ###
+User variables that need to be added are in [vars.tf](vars.tf). The number of virtual machines to be created must be provided. The user name and password for these virtual machines must also be provided.
+
+The condition to check valid virtual machines number is applied. 
+```
+condition     = var.numvm >= 2 && var.numvm <= 5
+error_message = "Accepted vms should be between 2 and 5."
+
+```
+
+### Running the commands ###
+
+Run this command to plan out the deployment.
+```
+terraform plan -out <outfilename>
+```
+
+Run this command to deploy the infrastructure on azure
+```
+terrform apply "<outfilename>"
+
+```
+
+### Network Security Group Rules ###
+
+- Rule to allow traffic within Virtual network named *azurerm_network_security_rule.allowVNall* can be found in [main.tf](main.tf)
+- Rule to deny all outside http *azurerm_network_security_rule.denyhttpinbound*  and *azurerm_network_security_rule.denyhttpoutbound*  traffic can also be found in [main.tf](main.tf)
 
 
+## Expected Output ##
 
+For tagging policy expected output is:
+![Alt text](./tagging-policy.PNG?raw=true "Tagging Policy screen capture")
+
+If this policy is violated this is expected:
+![Alt text](./Deny.PNG?raw=true "Tagging Policy Checked")
+
+All the created azure resources should look something like in this [Azureresources.csv](Azureresources.csv)
