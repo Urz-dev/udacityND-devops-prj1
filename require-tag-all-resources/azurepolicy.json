@@ -1,7 +1,7 @@
 {
   "type":"custom",
   "properties": {
-    "displayName": "verify that a tag exists on a resource.Only indexed resources are checked so, Resource groups are not checked",
+    "displayName": "tagging-policy Deny untagged resources",
     "mode": "Indexed",
     
     "description": "Enforces a required tag and its value. Does not apply to resource groups.",
