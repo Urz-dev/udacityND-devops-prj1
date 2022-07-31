@@ -27,7 +27,8 @@ resource "azurerm_subnet" "internal" {
 }
 
 resource "azurerm_network_interface" "main" {
-  name                = "${var.prefix}-nic"
+  count = var.numvm
+  name                = "${var.prefix}-nic${count.index}"
   resource_group_name = data.azurerm_resource_group.myrg_udacity.name
   location            = data.azurerm_resource_group.myrg_udacity.location
 
@@ -43,8 +44,33 @@ resource "azurerm_public_ip" "pip" {
   location            = data.azurerm_resource_group.myrg_udacity.location
   allocation_method   = "Dynamic"
 }
+resource "azurerm_network_security_group" "webserver" {
+  name                = "prj1_webserver"
+  location            = data.azurerm_resource_group.myrg_udacity.location
+  resource_group_name = data.azurerm_resource_group.myrg_udacity.name
+  security_rule {
+    access                     = "Allow"
+    direction                  = "Inbound"
+    name                       = "tls"
+    priority                   = 100
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    source_address_prefix      = "*"
+    destination_port_range     = "443"
+    destination_address_prefix = azurerm_subnet.internal.address_prefixes
+  }
+}
+resource "azurerm_availability_set" "avset" {
+  name                         = "${var.prefix}avset"
+  location                     = data.azurerm_resource_group.myrg_udacity.location
+  resource_group_name          = data.azurerm_resource_group.myrg_udacity.name
+  platform_fault_domain_count  = 2
+  platform_update_domain_count = 2
+  managed                      = true
+}
 resource "azurerm_linux_virtual_machine" "main" {
-  name                            = "${var.prefix}-vm"
+  count = var.numvm
+  name = "${var.prefix}-vm${count.index}"
   resource_group_name             = data.azurerm_resource_group.myrg_udacity.name
   location                        = data.azurerm_resource_group.myrg_udacity.location
   size                            = "Standard_D2s_v3"
@@ -52,7 +78,7 @@ resource "azurerm_linux_virtual_machine" "main" {
   admin_password                  = "${var.password}"
   disable_password_authentication = false
   network_interface_ids = [
-    azurerm_network_interface.main.id,
+    azurerm_network_interface.main[count.index].id,
   ]
 
   source_image_reference {

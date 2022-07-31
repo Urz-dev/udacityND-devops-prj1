@@ -1,10 +1,13 @@
+.DS_Store
+.DS_Store?
+
 # Local .terraform directories
 **/.terraform/*
 
 # .tfstate files
 *.tfstate
 *.tfstate.*
-
+*.lock.hcl
 # Crash log files
 crash.log
 
