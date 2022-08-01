@@ -72,10 +72,14 @@ terrform apply "<outfilename>"
 
 ## Expected Output ##
 
-For tagging policy expected output is:
+-For tagging policy expected output is:
 ![Alt text](./tagging-policy.PNG?raw=true "Tagging Policy screen capture")
 
-If this policy is violated this is expected:
+-If this policy is violated this is expected:
 ![Alt text](./Deny.PNG?raw=true "Tagging Policy Checked")
 
-All the created azure resources should look something like in this [Azureresources.csv](Azureresources.csv)
+
+- Sample output from terraform apply looks like :
+![Alt text](./terraApply.PNG?raw=true "Terraform apply Output")
+
+-All the created azure resources should look something like in this [Azureresources.csv](Azureresources.csv)
